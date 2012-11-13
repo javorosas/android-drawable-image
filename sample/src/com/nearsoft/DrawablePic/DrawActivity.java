@@ -5,7 +5,15 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import com.nearsoft.TapPhoto.R;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.charset.MalformedInputException;
 
 /**
  * Created with IntelliJ IDEA.
@@ -33,6 +41,40 @@ public class DrawActivity extends Activity {
         String path = intent.getStringExtra(MainActivity.DRAW_INTENT);
         Bitmap bitmap = loadPic(path);
         drawableView.setImageBitmap(bitmap);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.pic_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.save_pic:
+                savePic();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void savePic() {
+        File file = new File(MainActivity.PIC_DIR + "/app" + String.valueOf(System.currentTimeMillis()) + ".jpg");
+        Bitmap bitmap = drawableView.getBitmap();
+
+        try {
+            file.createNewFile();
+            FileOutputStream fos = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private Bitmap loadPic(String path) {

@@ -22,23 +22,14 @@ import java.util.List;
 public class DrawableImageView extends ImageView {
 
     //private Bitmap image;
-    private Path currentDrawingPath;
-    private Paint currentPaint;
-    private List<Path> pathList;
+    private Stroke currentStroke;
+    private List<Stroke> strokeList;
 
     public DrawableImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        //this.image = Bitmap.createBitmap(10, 10, Bitmap.Config.RGB_565);
         this.setOnTouchListener(touchListener);
-        currentPaint = new Paint();
-        currentPaint.setDither(true);
-        currentPaint.setColor(Color.BLACK);
-        currentPaint.setStyle(Paint.Style.STROKE);
-        currentPaint.setStrokeJoin(Paint.Join.ROUND);
-        currentPaint.setStrokeCap(Paint.Cap.ROUND);
-        currentPaint.setStrokeWidth(20);
-
-        pathList = new ArrayList<Path>();
+        currentStroke = new Stroke();
+        strokeList = new ArrayList<Stroke>();
     }
 
     public Bitmap getBitmap() {
@@ -49,24 +40,26 @@ public class DrawableImageView extends ImageView {
     public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        for (Path path : pathList) {
-            canvas.drawPath(path, currentPaint);
-            canvas.drawPath(currentDrawingPath, currentPaint);
+        currentStroke.Draw(canvas);
+        for (Stroke stroke : strokeList) {
+            stroke.Draw(canvas);
         }
     }
 
     OnTouchListener touchListener = new OnTouchListener() {
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
+            Path currentPath = currentStroke.getPath();
             if(motionEvent.getAction() == MotionEvent.ACTION_DOWN){
-                currentDrawingPath = new Path();
-                currentDrawingPath.moveTo(motionEvent.getX(), motionEvent.getY());
-                currentDrawingPath.lineTo(motionEvent.getX(), motionEvent.getY());
+                currentStroke = new Stroke();
+                currentPath = currentStroke.getPath();
+                currentPath.moveTo(motionEvent.getX(), motionEvent.getY());
+                currentPath.lineTo(motionEvent.getX(), motionEvent.getY());
             }else if(motionEvent.getAction() == MotionEvent.ACTION_MOVE){
-                currentDrawingPath.lineTo(motionEvent.getX(), motionEvent.getY());
+                currentPath.lineTo(motionEvent.getX(), motionEvent.getY());
             }else if(motionEvent.getAction() == MotionEvent.ACTION_UP){
-                currentDrawingPath.lineTo(motionEvent.getX(), motionEvent.getY());
-                pathList.add(currentDrawingPath);
+                currentPath.lineTo(motionEvent.getX(), motionEvent.getY());
+                strokeList.add(currentStroke);
             }
             invalidate();
             return true;

@@ -19,7 +19,8 @@ import java.io.File;
 public class MainActivity extends Activity {
 
     private static final int PICTURE_TAKEN = 31;
-    private static final String PIC_PATH = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/tmp.jpg";
+    public static final String PIC_DIR = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getPath();
+    public static final String PIC_PATH = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/tmp.jpg";
     public static final String DRAW_INTENT = "DrawActivity";
     private Button btnPhoto;
 
@@ -32,7 +33,7 @@ public class MainActivity extends Activity {
         this.btnPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dispatchTakePictureIntent(PICTURE_TAKEN);
+            dispatchTakePictureIntent(PICTURE_TAKEN);
             }
         });
     }

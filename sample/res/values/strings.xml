@@ -2,4 +2,5 @@
 <resources>
     <string name="app_name">DrawablePic</string>
     <string name="btnPhoto">Take a pic!</string>
+    <string name="save_pic">Save</string>
 </resources>
